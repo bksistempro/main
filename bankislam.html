@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Islam Instant Transfer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #c9204e;
+            --primary-dark: #a01a40;
+            --primary-light: #e83a6d;
+            --secondary: #2d3748;
+            --accent: #f6ad55;
+            --light: #f8f9fa;
+            --dark: #1a202c;
+            --success: #38a169;
+            --warning: #dd6b20;
+            --danger: #e53e3e;
+            --info: #3182ce;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 70px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .bislam-logo img {
+            height: 55px;
+        }
+        
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .header-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        
+        .header-nav-item:hover {
+            color: var(--primary);
+        }
+        
+        .header-nav-item.active {
+            color: var(--primary);
+        }
+        
+        .header-nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .notification-bell {
+            position: relative;
+            color: var(--secondary);
+            cursor: pointer;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .sidebar-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 1rem;
+        }
+        
+        .menu-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .menu-group-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+            padding: 0 0.75rem;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--secondary);
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+        
+        .menu-item:hover {
+            background: rgba(201, 32, 78, 0.1);
+            color: var(--primary);
+        }
+        
+        .menu-item.active {
+            background: rgba(201, 32, 78, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: auto;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background: #f5f7fa;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .page-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .page-title-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+        
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .card-subtitle {
+            color: var(--secondary);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-badge.failed {
+            background: rgba(229, 62, 62, 0.1);
+            color: var(--danger);
+        }
+        
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.875rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(201, 32, 78, 0.2);
+        }
+        
+        .form-control.error {
+            border-color: var(--danger);
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-size: 0.8125rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+            opacity: 0.7;
+        }
+        
+        .input-with-icon .form-control {
+            padding-left: 2.75rem;
+        }
+        
+        .transaction-amount {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .amount-prefix {
+            background: #f7fafc;
+            padding: 0.875rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            border: 1px solid #e2e8f0;
+            min-width: 48px;
+            text-align: center;
+        }
+        
+        /* Button Styles */
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.875rem 1.75rem;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(201, 32, 78, 0.2);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--primary-light), var(--primary));
+            box-shadow: 0 6px 16px rgba(201, 32, 78, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(201, 32, 78, 0.05);
+        }
+        
+        /* Status Section */
+        .status-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 1.75rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .status-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .status-details {
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding-top: 1.5rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .detail-label {
+            width: 200px;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.875rem;
+        }
+        
+        .detail-value {
+            flex: 1;
+            color: var(--dark);
+            font-size: 0.9375rem;
+        }
+        
+        .detail-value.warning {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        
+        /* Progress Styles */
+        .progress-container {
+            margin-top: 1.5rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 1.25rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        
+        .progress-title {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.875rem;
+        }
+        
+        .progress-percentage {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.875rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            border-radius: 4px;
+            width: 50%;
+            transition: width 0.6s ease;
+        }
+        
+        /* Overlay & Loading */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .loading {
+            text-align: center;
+            color: white;
+        }
+        
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 8px solid var(--primary);
+            animation: spin 1.2s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 1.125rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Popup Styles */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--primary);
+        }
+        
+        .popup.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .popup-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .popup-title i {
+            color: var(--primary);
+        }
+        
+        .close-popup {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0.7;
+        }
+        
+        .close-popup:hover {
+            color: var(--primary);
+            opacity: 1;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem 0;
+            }
+            
+            .sidebar-header, .menu-group-title, .menu-item span {
+                display: none;
+            }
+            
+            .menu-item {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+            
+            .sidebar-footer {
+                padding: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                padding: 0;
+                height: 60px;
+                overflow-x: auto;
+            }
+            
+            .sidebar-header, .sidebar-footer {
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                flex: 1;
+                padding: 0;
+            }
+            
+            .menu-group {
+                display: flex;
+                margin: 0;
+            }
+            
+            .menu-item {
+                padding: 1rem;
+                white-space: nowrap;
+            }
+            
+            .menu-item i {
+                margin-right: 0;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            
+            .detail-label {
+                width: 100%;
+            }
+            
+            header {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .header-nav {
+                width: 100%;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .page-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            .popup {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="bislam-logo">
+                <img src="logoil.png" alt="Bank Islam Logo">
+            </div>
+        </div>
+        
+        <div class="header-nav">
+            <div class="header-nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </div>
+            <div class="header-nav-item active">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Transfers</span>
+            </div>
+            <div class="header-nav-item">
+                <i class="fas fa-wallet"></i>
+                <span>Accounts</span>
+            </div>
+            <div class="header-nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Investments</span>
+            </div>
+            <div class="header-nav-item">
+                <i class="fas fa-credit-card"></i>
+                <span>Cards</span>
+            </div>
+        </div>
+        
+        <div class="header-actions">
+            <div class="notification-bell">
+                <i class="fas fa-bell"></i>
+                <div class="notification-badge">3</div>
+            </div>
+            <div class="user-avatar">TA</div>
+        </div>
+    </header>
+    
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Admin Dashboard</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-group">
+                    <div class="menu-group-title">Personal Banking</div>
+                    <div class="menu-item">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-piggy-bank"></i>
+                        <span>Savings</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Statements</span>
+                    </div>
+                </div>
+                
+                <div class="menu-group">
+                    <div class="menu-group-title">Transactions</div>
+                    <div class="menu-item active">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Fund Transfer</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Payments</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-history"></i>
+                        <span>Transaction History</span>
+                    </div>
+                </div>
+                
+                <div class="menu-group">
+                    <div class="menu-group-title">Services</div>
+                    <div class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security</span>
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-headset"></i>
+                        <span>Support</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="page-header">
+                <div class="page-title">
+                    <div class="page-title-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h1>Interbank Fund Transfer</h1>
+                </div>
+                
+                <div class="page-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Page 1: Input Section -->
+            <section id="page1">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Transfer Details</div>
+                            <div class="card-subtitle">Review and confirm transfer information</div>
+                        </div>
+                        <div class="status-badge failed">Failed</div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="status" class="form-label">Status</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <input type="text" id="status" class="form-control" value="Failed" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="conditionalApproval" class="form-label">Conditional Approval</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                                <input type="text" id="conditionalApproval" class="form-control" value="Not Allowed" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reason" class="form-label">Reason</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-comment-alt"></i>
+                                <input type="text" id="reason" class="form-control" value="Commitment not strong enough" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="action" class="form-label">Required Action</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-tasks"></i>
+                                <input type="text" id="action" class="form-control" value="**PLEASE COVER YOUR COMMITMENT WITH APPROVAL X2 RM680 (REFUNDABLE)**" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="percentage" class="form-label">Completion Percentage</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-percentage"></i>
+                                <input type="number" id="percentage" class="form-control" value="50" min="0" max="100">
+                            </div>
+                            <div class="error-message" id="percentage-error">Percentage must be between 0 and 100</div>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" onclick="resetForm()">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                        <button class="btn btn-primary" onclick="goToPage2()">
+                            Continue <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Page 2: Open Interbank Transfer -->
+            <section id="page2" style="display:none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Beneficiary Details</div>
+                            <div class="card-subtitle">Enter recipient bank information</div>
+                        </div>
+                        <img src="https://bestpay24.com/wp-content/uploads/2024/02/138275c43d5964666247db71bea5de20.webp" alt="Interbank Transfer" height="50">
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label for="applicantName" class="form-label">Applicant's Name</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" id="applicantName" class="form-control" value="AZMI BIN MUHAMMAD">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="nric" class="form-label">NRIC/Passport</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-id-card"></i>
+                                    <input type="text" id="nric" class="form-control" value="981222-03-5673">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="loanType" class="form-label">Type of Loan</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                    <select id="loanType" class="form-control">
+                                        <option value="personal">Personal Loan</option>
+                                        <option value="business">Business Loan</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="form-group">
+                                <label for="receivingBank" class="form-label">Receiving Bank</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-landmark"></i>
+                                    <select id="receivingBank" class="form-control">
+                                        <option value="">Select a bank</option>
+                                        <optgroup label="Traditional Banks">
+                                            <option>Maybank</option>
+                                            <option>CIMB Bank</option>
+                                            <option>Public Bank</option>
+                                            <option>RHB Bank</option>
+                                            <option>Hong Leong Bank</option>
+                                            <option>AmBank</option>
+                                            <option>Affin Bank</option>
+                                            <option>Alliance Bank</option>
+                                            <option>Bank Simpanan Nasional</option>
+                                            <option>Agrobank</option>
+                                            <option>Bank Rakyat</option>
+                                        </optgroup>
+                                        <optgroup label="Islamic Banks">
+                                            <option>Bank Islam</option>
+                                            <option>Bank Muamalat</option>
+                                            <option>MBSB Bank</option>
+                                            <option>Al Rajhi Bank</option>
+                                            <option>Kuwait Finance House</option>
+                                            <option>HSBC Amanah</option>
+                                            <option>OCBC Al-Amin</option>
+                                            <option>Standard Chartered Saadiq</option>
+                                        </optgroup>
+                                        <optgroup label="International Banks">
+                                            <option>HSBC Malaysia</option>
+                                            <option>OCBC Bank Malaysia</option>
+                                            <option>UOB Malaysia</option>
+                                            <option>Standard Chartered Bank</option>
+                                            <option>Bank of China</option>
+                                            <option>ICBC Malaysia</option>
+                                            <option>China Construction Bank</option>
+                                            <option>Bangkok Bank</option>
+                                            <option>MUFG Bank</option>
+                                            <option>Sumitomo Mitsui Bank</option>
+                                            <option>Mizuho Bank</option>
+                                            <option>Deutsche Bank</option>
+                                            <option>JP Morgan Chase</option>
+                                            <option>BNP Paribas</option>
+                                            <option>India International Bank</option>
+                                            <option>The Bank of Nova Scotia</option>
+                                        </optgroup>
+                                        <optgroup label="Digital Banks">
+                                            <option>GX Bank</option>
+                                            <option>Boost Bank</option>
+                                            <option>AEON Bank</option>
+                                            <option>KAF Digital Bank</option>
+                                            <option>RYT Bank</option>
+                                            <option>Touch N Go</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div class="error-message" id="bank-error">Please select a bank</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="beneficiaryAccount" class="form-label">Beneficiary Account Number</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-credit-card"></i>
+                                    <input type="text" id="beneficiaryAccount" class="form-control" placeholder="Enter account number">
+                                </div>
+                                <div class="error-message" id="account-error">Please enter a valid account number</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="transactionAmount" class="form-label">Transaction Amount (RM)</label>
+                                <div class="transaction-amount">
+                                    <div class="amount-prefix">RM</div>
+                                    <input type="number" id="transactionAmount" class="form-control" placeholder="Enter amount">
+                                </div>
+                                <div class="error-message" id="amount-error">Amount must be greater than 0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" onclick="goToPage1()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-primary" onclick="submitForm()">
+                            <i class="fas fa-paper-plane"></i> Submit Transfer
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="status-section">
+                    <div class="status-header">
+                        <div class="status-title">Transaction Status</div>
+                    </div>
+                    
+                    <div class="status-details">
+                        <div class="detail-row">
+                            <div class="detail-label">Current Status</div>
+                            <div class="detail-value">Pending</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Last Updated</div>
+                            <div class="detail-value" id="lastUpdated">-</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Security Level</div>
+                            <div class="detail-value">Level 2 Authentication Required</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Overlay & Loading -->
+    <div class="overlay" id="loadingOverlay">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Processing Your Transfer</div>
+        </div>
+    </div>
+    
+    <!-- Popup -->
+    <div class="popup" id="resultPopup">
+        <div class="popup-header">
+            <div class="popup-title">
+                <i class="fas fa-file-invoice"></i>
+                Transaction Result
+            </div>
+            <button class="close-popup" onclick="closePopup()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="status-details">
+            <div class="detail-row">
+                <div class="detail-label">Transaction Status</div>
+                <div class="detail-value warning" id="popup-status">Failed</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Conditional Approval</div>
+                <div class="detail-value warning" id="popup-approval">Not Allowed</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Reason</div>
+                <div class="detail-value warning" id="popup-reason">Commitment not strong enough</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Required Action</div>
+                <div class="detail-value warning" id="popup-action">**PLEASE COVER YOUR COMMITMENT WITH APPROVAL X2 RM680 (REFUNDABLE)**</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Applicant Name</div>
+                <div class="detail-value" id="popup-name">-</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Receiving Bank</div>
+                <div class="detail-value" id="popup-bank">-</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Transaction Amount</div>
+                <div class="detail-value" id="popup-amount">-</div>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-header">
+                <div class="progress-title">Transfer Progress</div>
+                <div class="progress-percentage" id="popup-percentage">50%</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+        
+        <div class="btn-container" style="margin-top: 30px;">
+            <button class="btn btn-primary" onclick="closePopup()">
+                <i class="fas fa-check"></i> Acknowledge
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            
+            // Update last updated time
+            const lastUpdated = document.getElementById('lastUpdated');
+            if (lastUpdated) {
+                lastUpdated.textContent = now.toLocaleTimeString();
+            }
+        }
+        
+        // Page navigation functions
+        function goToPage2() {
+            const percentage = document.getElementById('percentage').value;
+            
+            // Validate percentage
+            if (percentage < 0 || percentage > 100 || isNaN(percentage)) {
+                document.getElementById('percentage-error').style.display = 'block';
+                document.getElementById('percentage').classList.add('error');
+                return;
+            }
+            
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'block';
+            updateTime();
+        }
+        
+        function goToPage1() {
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('page1').style.display = 'block';
+        }
+        
+        function resetForm() {
+            document.getElementById('percentage').value = '50';
+            document.getElementById('percentage').classList.remove('error');
+            document.getElementById('percentage-error').style.display = 'none';
+        }
+        
+        // Form submission
+        function submitForm() {
+            const bank = document.getElementById('receivingBank').value;
+            const account = document.getElementById('beneficiaryAccount').value;
+            const amount = document.getElementById('transactionAmount').value;
+            
+            // Reset errors
+            document.getElementById('bank-error').style.display = 'none';
+            document.getElementById('account-error').style.display = 'none';
+            document.getElementById('amount-error').style.display = 'none';
+            document.getElementById('receivingBank').classList.remove('error');
+            document.getElementById('beneficiaryAccount').classList.remove('error');
+            document.getElementById('transactionAmount').classList.remove('error');
+            
+            // Validate form
+            let valid = true;
+            
+            if (!bank) {
+                document.getElementById('bank-error').style.display = 'block';
+                document.getElementById('receivingBank').classList.add('error');
+                valid = false;
+            }
+            
+            if (!account || account.length < 5) {
+                document.getElementById('account-error').style.display = 'block';
+                document.getElementById('beneficiaryAccount').classList.add('error');
+                valid = false;
+            }
+            
+            if (!amount || amount <= 0) {
+                document.getElementById('amount-error').style.display = 'block';
+                document.getElementById('transactionAmount').classList.add('error');
+                valid = false;
+            }
+            
+            if (!valid) return;
+            
+            // Show loading overlay
+            document.getElementById('loadingOverlay').classList.add('active');
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.remove('active');
+                
+                // Get values for popup
+                const status = document.getElementById('status').value;
+                const approval = document.getElementById('conditionalApproval').value;
+                const reason = document.getElementById('reason').value;
+                const action = document.getElementById('action').value;
+                const percentage = document.getElementById('percentage').value;
+                const name = document.getElementById('applicantName').value;
+                const bankName = document.getElementById('receivingBank').value;
+                const amountValue = document.getElementById('transactionAmount').value;
+                
+                // Set popup values
+                document.getElementById('popup-status').textContent = status;
+                document.getElementById('popup-approval').textContent = approval;
+                document.getElementById('popup-reason').textContent = reason;
+                document.getElementById('popup-action').textContent = action;
+                document.getElementById('popup-percentage').textContent = percentage + '%';
+                document.getElementById('popup-name').textContent = name;
+                document.getElementById('popup-bank').textContent = bankName;
+                document.getElementById('popup-amount').textContent = 'RM ' + amountValue;
+                document.getElementById('progress-fill').style.width = percentage + '%';
+                
+                // Show popup
+                document.getElementById('resultPopup').classList.add('active');
+            }, 3000);
+        }
+        
+        // Close popup
+        function closePopup() {
+            document.getElementById('resultPopup').classList.remove('active');
+        }
+        
+        // Initialize
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
